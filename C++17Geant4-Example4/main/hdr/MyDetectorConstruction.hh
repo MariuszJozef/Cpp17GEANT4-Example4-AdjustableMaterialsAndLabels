@@ -33,11 +33,6 @@ public:
 
 	G4ThreeVector GetHalfLabSize() const { return halfLabSize; }
 
-	G4ThreeVector GetRotationAxis() const { return rotationAxis; }
-	G4double GetRotationAngle() const { return rotationAngle; }
-	void SetActiveRotationAxisAngle(const G4ThreeVector& rotationAxis,
-									G4double rotationAngle);
-
 	G4String GetLabMaterial() const { return labMaterial->GetName(); }
 	void SetLabMaterial(const G4String& newMaterialName);
 

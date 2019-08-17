@@ -357,11 +357,8 @@ unique_ptr<G4VPhysicalVolume> MyDetectorConstruction::BuildCone()
 
 	logicalCone->SetVisAttributes(ChooseColour(Colour::cyan, Texture::solid).release());
 
-//	G4RotationMatrix *rotateCone = new G4RotationMatrix(rotationAxis, rotationAngle);
-//	unique_ptr<G4RotationMatrix> rotateCone {make_unique<G4RotationMatrix>(rotationAxis, rotationAngle)};
 	return make_unique<G4PVPlacement>
-//						(rotateCone.release(),	     // active rotation
-						(nullptr,			     // active rotation
+						(nullptr,			     	 // no rotation
 						G4ThreeVector(-13*cm, 0, 0), // at (x,y,z)
 						logicalCone.get(),			 // logical volume
 						"Cone",		      			 // name
@@ -453,17 +450,6 @@ unique_ptr<G4VisAttributes> MyDetectorConstruction::
 
 	chosenColour->SetVisibility(isVisible);
 	return chosenColour;
-}
-
-void MyDetectorConstruction::SetActiveRotationAxisAngle(const G4ThreeVector& rotationAxis,
-														G4double rotationAngle)
-{// Force this to be an active rather than a passive rotation
-	this->rotationAxis = -rotationAxis;
-	this->rotationAngle = rotationAngle;
-//  Rotation effective immediately; removes beam:
-//	G4RunManager::GetRunManager()->DefineWorldVolume(Construct());
-//  Rotation takes effect upon: /run/beamOn
-	G4RunManager::GetRunManager()->ReinitializeGeometry();
 }
 
 void MyDetectorConstruction::SetLabMaterial(const G4String& newMaterialName)

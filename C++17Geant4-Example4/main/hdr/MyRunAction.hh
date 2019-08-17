@@ -21,10 +21,6 @@ public:
 	void EndOfRunAction(const G4Run* run) override;
 
 private:
-	void DisplayGunInfo();
-	void DisplayDynamicLabels();
-
-private:
 	unique_ptr<MyDetectorConstruction> myDetectorConstruction;
 	unique_ptr<MyPrimaryGeneratorAction> myPrimaryGeneratorAction;
 };
