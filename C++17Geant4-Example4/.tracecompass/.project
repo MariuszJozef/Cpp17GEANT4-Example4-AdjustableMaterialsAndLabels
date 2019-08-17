@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>.tracecompass-C++17Geant4-Example4</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.linuxtools.tmf.project.nature</nature>
+	</natures>
+</projectDescription>

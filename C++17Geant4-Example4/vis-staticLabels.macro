@@ -1,0 +1,23 @@
+# Be sure to run vis-init.macro first!
+# /control/execute vis-init.macro
+# or in main()
+# uiManager->ApplyCommand("/control/execute vis-init.macro");
+
+# Labels:
+# /vis/scene/add/text x y z unit font_size x_offset y_offset text
+# Adds text at (x*unit, y*unit, z*unit) with font_size x_offset y_offset
+# Font size and offsets in pixels
+
+/vis/set/textColour green
+/vis/scene/add/text2D -0.9 0.5 12 ! ! green particle: charge = 0 
+/vis/set/textColour red
+/vis/scene/add/text2D -0.9 0.4 12 ! ! red particle:   charge < 0 
+/vis/set/textColour blue
+/vis/scene/add/text2D -0.9 0.3 12 ! ! blue particle:  charge > 0 
+/vis/set/textColour yellow
+/vis/scene/add/text2D -0.9 0.2 12 ! ! yellow dots:    Monte Carlo steps 
+/vis/set/textColour white
+/vis/scene/add/text2D -0.9 0.1 12 ! ! white labels:   material type 
+
+/vis/set/textColour yellow
+/vis/scene/add/logo2D
