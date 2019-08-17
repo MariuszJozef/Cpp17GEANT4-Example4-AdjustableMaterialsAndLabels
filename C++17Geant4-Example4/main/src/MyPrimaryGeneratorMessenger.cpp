@@ -39,7 +39,6 @@ MyPrimaryGeneratorMessenger::MyPrimaryGeneratorMessenger(
 
 	beamRandomDistributionUICommand->SetGuidance("on or off u or g (uniform or Gaussian) amplitude or sigma");
 
-//	G4UIparameter *beamRandomDistributionType = new G4UIparameter("RandomDistribution", 's', false);
 	unique_ptr<G4UIparameter> beamRandomDistributionType
 		{ make_unique<G4UIparameter>("RandomDistribution", 's', false) };
 	beamRandomDistributionType->SetGuidance("u for uniform or g for Gaussian distribution");
@@ -47,7 +46,6 @@ MyPrimaryGeneratorMessenger::MyPrimaryGeneratorMessenger(
 	beamRandomDistributionType->SetDefaultValue("u");
 	beamRandomDistributionUICommand->SetParameter(beamRandomDistributionType.release());
 
-//	G4UIparameter *beamRandomDistributionAmplitudeOrSigma = new G4UIparameter("RandomDistribution", 'd', false);
 	unique_ptr<G4UIparameter> beamRandomDistributionAmplitudeOrSigma
 		{ make_unique<G4UIparameter>("RandomDistribution", 'd', false) };
 	beamRandomDistributionAmplitudeOrSigma->SetGuidance("amplitude for uniform distribution or sigma for Gaussian");

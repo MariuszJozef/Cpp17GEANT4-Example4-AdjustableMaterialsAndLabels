@@ -38,10 +38,6 @@ void MyDetectorConstruction::DefineMaterials()
 	G4int nucleonsPerNucleus, numberOfIsotopes, atomsPerMolecule, numberOfComponents;
 	G4double relativeAbundance, fractionOfMass;
 
-//	Raw pointers of G4Material type MUST NOT be deleted nor converted to smart pointers!
-//	(else will incur double deletion at end of scope)!
-//	Moreover, copy constructor and assignment operator of G4Material are private.
-
 //	Instantiate custom built materials to make them available whenever changing
 //	materials via GUI commands such as:
 //		/materials/lab Lead
@@ -361,8 +357,11 @@ unique_ptr<G4VPhysicalVolume> MyDetectorConstruction::BuildCone()
 
 	logicalCone->SetVisAttributes(ChooseColour(Colour::cyan, Texture::solid).release());
 
+//	G4RotationMatrix *rotateCone = new G4RotationMatrix(rotationAxis, rotationAngle);
+//	unique_ptr<G4RotationMatrix> rotateCone {make_unique<G4RotationMatrix>(rotationAxis, rotationAngle)};
 	return make_unique<G4PVPlacement>
-						(nullptr,				     // no rotation
+//						(rotateCone.release(),	     // active rotation
+						(nullptr,			     // active rotation
 						G4ThreeVector(-13*cm, 0, 0), // at (x,y,z)
 						logicalCone.get(),			 // logical volume
 						"Cone",		      			 // name
@@ -454,6 +453,17 @@ unique_ptr<G4VisAttributes> MyDetectorConstruction::
 
 	chosenColour->SetVisibility(isVisible);
 	return chosenColour;
+}
+
+void MyDetectorConstruction::SetActiveRotationAxisAngle(const G4ThreeVector& rotationAxis,
+														G4double rotationAngle)
+{// Force this to be an active rather than a passive rotation
+	this->rotationAxis = -rotationAxis;
+	this->rotationAngle = rotationAngle;
+//  Rotation effective immediately; removes beam:
+//	G4RunManager::GetRunManager()->DefineWorldVolume(Construct());
+//  Rotation takes effect upon: /run/beamOn
+	G4RunManager::GetRunManager()->ReinitializeGeometry();
 }
 
 void MyDetectorConstruction::SetLabMaterial(const G4String& newMaterialName)

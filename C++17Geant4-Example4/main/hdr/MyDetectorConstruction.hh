@@ -33,6 +33,11 @@ public:
 
 	G4ThreeVector GetHalfLabSize() const { return halfLabSize; }
 
+	G4ThreeVector GetRotationAxis() const { return rotationAxis; }
+	G4double GetRotationAngle() const { return rotationAngle; }
+	void SetActiveRotationAxisAngle(const G4ThreeVector& rotationAxis,
+									G4double rotationAngle);
+
 	G4String GetLabMaterial() const { return labMaterial->GetName(); }
 	void SetLabMaterial(const G4String& newMaterialName);
 
@@ -90,6 +95,8 @@ private:
 	unique_ptr<G4VPhysicalVolume> physicalCone {nullptr};
 
 	G4bool checkOverlaps {true};
+	G4ThreeVector rotationAxis {};
+	G4double rotationAngle {};
 
 	enum class Colour { red, green, blue,
 						yellow, orange, brown, cyan, magenta, white, invisible };
