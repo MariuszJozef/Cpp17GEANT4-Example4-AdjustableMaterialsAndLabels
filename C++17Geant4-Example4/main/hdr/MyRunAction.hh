@@ -2,7 +2,7 @@
 #define HDR_MYRUNACTION_HH_
 
 #include "G4UserRunAction.hh"
-#include "globals.hh"
+//#include "globals.hh"
 
 class G4Run;
 class MyDetectorConstruction;
@@ -15,10 +15,11 @@ class MyRunAction final: public G4UserRunAction
 public:
 	MyRunAction(MyDetectorConstruction *myDetectorConstruction,
 				MyPrimaryGeneratorAction *myPrimaryGeneratorAction);
-//	virtual ~MyRunAction();
 
-//	void BeginOfRunAction(const G4Run* run) override;
 	void EndOfRunAction(const G4Run* run) override;
+
+private:
+	void DisplayMaterialLabelsViaApplyCommand();
 
 private:
 	unique_ptr<MyDetectorConstruction> myDetectorConstruction;

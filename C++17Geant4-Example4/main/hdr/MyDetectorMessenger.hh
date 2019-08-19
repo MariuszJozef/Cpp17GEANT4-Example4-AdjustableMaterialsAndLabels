@@ -3,30 +3,40 @@
 
 #include "G4UImessenger.hh"
 #include "G4UIcmdWithAString.hh"
+#include "G4UIcommand.hh"
 #include "G4LogicalVolume.hh"
 #include "G4VPhysicalVolume.hh"
 
 class MyDetectorConstruction;
 
 using std::unique_ptr;
+using std::make_unique;
 
 class MyDetectorMessenger final: public G4UImessenger
 {
 public:
 	MyDetectorMessenger(MyDetectorConstruction* myDetectorConstruction);
-//	~MyDetectorMessenger();
+	~MyDetectorMessenger();
 
 	void SetNewValue(G4UIcommand* command, G4String newValue) override;
 	G4String GetCurrentValue(G4UIcommand* command) override;
 
 private:
 	unique_ptr<MyDetectorConstruction> myDetectorConstruction {nullptr};
-	unique_ptr<G4UIcmdWithAString> labMaterialUICommand {nullptr};
-	unique_ptr<G4UIcmdWithAString> trapezoidMaterialUICommand {nullptr};
-	unique_ptr<G4UIcmdWithAString> sphereMaterialUICommand {nullptr};
-	unique_ptr<G4UIcmdWithAString> tetrahedronMaterialUICommand {nullptr};
-	unique_ptr<G4UIcmdWithAString> torusMaterialUICommand {nullptr};
-	unique_ptr<G4UIcmdWithAString> coneMaterialUICommand {nullptr};
+	unique_ptr<G4UIcmdWithAString> labMaterialUICommand
+		{make_unique<G4UIcmdWithAString>("/material/lab", this)};
+	unique_ptr<G4UIcmdWithAString> trapezoidMaterialUICommand
+		{make_unique<G4UIcmdWithAString>("/material/trapezoid", this)};
+	unique_ptr<G4UIcmdWithAString> sphereMaterialUICommand
+		{make_unique<G4UIcmdWithAString>("/material/sphere", this)};
+	unique_ptr<G4UIcmdWithAString> tetrahedronMaterialUICommand
+		{make_unique<G4UIcmdWithAString>("/material/tetrahedron", this)};
+	unique_ptr<G4UIcmdWithAString> torusMaterialUICommand
+		{make_unique<G4UIcmdWithAString>("/material/torus", this)};
+	unique_ptr<G4UIcmdWithAString>
+		coneMaterialUICommand {make_unique<G4UIcmdWithAString>("/material/cone", this)};
+	G4UIcommand *activeRotationAxisAngleUICommand
+		{new G4UIcommand("/rotate/rotationAngles", this)};
 
 private:
 	G4String& ConvertToSynonymousMaterialName(G4String& newValue);

@@ -22,16 +22,17 @@ class G4VPhysicalVolume;
 class G4VisAttributes;
 
 using std::unique_ptr;
+using std::make_unique;
 
 class MyDetectorConstruction final: public G4VUserDetectorConstruction
 {
 public:
-	MyDetectorConstruction();
-//	~MyDetectorConstruction();
-
 	G4VPhysicalVolume* Construct() override;
 
 	G4ThreeVector GetHalfLabSize() const { return halfLabSize; }
+
+	void SetActiveRotationAngles(G4double rotationAngleX, G4double rotationAxisY,
+								G4double rotationAxisZ);
 
 	G4String GetLabMaterial() const { return labMaterial->GetName(); }
 	void SetLabMaterial(const G4String& newMaterialName);
@@ -51,12 +52,12 @@ public:
 	G4String GetConeMaterial() const { return coneMaterial->GetName(); }
 	void SetConeMaterial(const G4String& newMaterialName);
 
-	void DisplayMaterialLabelsViaG4Text();
 	void DisplayMaterialLabelsViaMacroFile();
 
 private:
-	unique_ptr<MyDetectorMessenger> myDetectorMessenger {nullptr};
-	G4ThreeVector halfLabSize;
+	unique_ptr<MyDetectorMessenger> myDetectorMessenger
+		{make_unique<MyDetectorMessenger>(this)};
+	G4ThreeVector halfLabSize {G4ThreeVector(20*cm, 21*cm, 22*cm)};
 
 //	Raw pointers of G4Material type MUST NOT be deleted nor converted to smart pointers!
 //	(else will incur double deletion at end of scope)!
@@ -68,7 +69,9 @@ private:
 	G4Material *torusMaterial {nullptr};
 	G4Material *coneMaterial {nullptr};
 
-	G4Box *solidLab {nullptr}; // MUST be a raw pointer otherwise changing materials fails, i.e. a short dump upon e.g. /material/trapezoid ... followed by /run/beamOn
+//  solidLab MUST be a raw pointer otherwise changing materials fails,
+//	i.e. a short dump upon e.g. /material/trapezoid ... followed by /run/beamOn
+	G4Box *solidLab {nullptr};
 	unique_ptr<G4Trd> solidTrapezoid {nullptr};
 	unique_ptr<G4Sphere> solidSphere {nullptr};
 	unique_ptr<G4Tet> solidTetrahedron {nullptr};
@@ -92,6 +95,7 @@ private:
 	G4bool checkOverlaps {true};
 	G4ThreeVector rotationAxis {};
 	G4double rotationAngle {};
+	G4double rotationAngleX {-15*deg}, rotationAngleY {-55*deg}, rotationAngleZ {55*deg};
 
 	enum class Colour { red, green, blue,
 						yellow, orange, brown, cyan, magenta, white, invisible };
@@ -114,7 +118,8 @@ private:
 	unique_ptr<G4VPhysicalVolume> BuildTetrahedron();
 	unique_ptr<G4VPhysicalVolume> BuildTorus();
 	unique_ptr<G4VPhysicalVolume> BuildCone();
-	unique_ptr<G4VisAttributes> ChooseColour(Colour colour, Texture texture = Texture::solid);
+	unique_ptr<G4VisAttributes> ChooseColour(Colour colour,
+											Texture texture = Texture::solid);
 	G4Material* ChooseMaterialFromNISTdatabase(Material material);
 	G4Material* ChooseMaterialFromNISTdatabase(const G4String& material);
 };

@@ -8,20 +8,6 @@
 #include "G4NistManager.hh"
 #include "G4VisAttributes.hh"
 #include "G4RunManager.hh"
-#include "G4UImanager.hh"
-#include "G4VVisManager.hh"
-#include "G4Text.hh"
-
-using std::make_unique;
-
-MyDetectorConstruction::MyDetectorConstruction()
-:
-G4VUserDetectorConstruction(),
-myDetectorMessenger {make_unique<MyDetectorMessenger>(this)},
-halfLabSize {G4ThreeVector(20*cm, 21*cm, 22*cm)}
-{}
-
-//MyDetectorConstruction::~MyDetectorConstruction() {}
 
 G4VPhysicalVolume* MyDetectorConstruction::Construct()
 {
@@ -43,23 +29,42 @@ void MyDetectorConstruction::DefineMaterials()
 //		/materials/lab Lead
 //	or
 //		/materials/trapezoid Titanium
-//	etc, (cf. MyDetectorMessenger.cpp) - otherwise get "Material not found" message.
+//	etc, (cf. MyDetectorMessenger.cpp) - otherwise get "Material not found" error.
 
 	// DO NOT convert G4Material to raw pointers!
-	G4Material *Al = new G4Material(name="aluminium", atomicNumber=13, molarMass=26.98*g/mole, density=2.7*g/cm3);
-	G4Material *Pb = new G4Material(name="lead", atomicNumber=82, molarMass= 207.19*g/mole, density= 11.35*g/cm3);
-	G4Material *Ti = new G4Material(name="titanium", atomicNumber=22, molarMass=47.867*g/mole, density=4.54*g/cm3);
+	G4Material *Al = new G4Material(name="aluminium",
+									atomicNumber=13,
+									molarMass=26.98*g/mole,
+									density=2.7*g/cm3);
+	G4Material *Pb = new G4Material(name="lead",
+									atomicNumber=82,
+									molarMass= 207.19*g/mole,
+									density= 11.35*g/cm3);
+	G4Material *Ti = new G4Material(name="titanium",
+									atomicNumber=22,
+									molarMass=47.867*g/mole,
+									density=4.54*g/cm3);
 
 	// cesium iodide
-	auto Cs {make_unique<G4Element>("cesium", symbol="Cs", atomicNumber=55, molarMass=132.9*g/mole)};
-	auto I {make_unique<G4Element>("iodine", symbol="I", atomicNumber=53, molarMass=126.9*g/mole)};
-	G4Material *CsI = new G4Material(name="CsI", density=4.51*g/cm3, numberOfComponents=2);
+	auto Cs {make_unique<G4Element>("cesium", symbol="Cs",
+									atomicNumber=55,
+									molarMass=132.9*g/mole)};
+	auto I {make_unique<G4Element>("iodine", symbol="I",
+									atomicNumber=53,
+									molarMass=126.9*g/mole)};
+	G4Material *CsI = new G4Material(name="CsI",
+									density=4.51*g/cm3,
+									numberOfComponents=2);
 	CsI->AddElement(Cs.release(), fractionOfMass=0.5);
 	CsI->AddElement(I.release(), fractionOfMass=0.5);
 
 	// graphite
-	auto C12isotope {make_unique<G4Isotope>("C12", atomicNumber=6, nucleonsPerNucleus=12)};
-	auto C12element {make_unique<G4Element>("Graphite", symbol="C12", numberOfComponents=1)};
+	auto C12isotope {make_unique<G4Isotope>("C12",
+											atomicNumber=6,
+											nucleonsPerNucleus=12)};
+	auto C12element {make_unique<G4Element>("Graphite",
+											symbol="C12",
+											numberOfComponents=1)};
 	C12element->AddIsotope(C12isotope.release(), relativeAbundance=100*perCent);
 	G4Material *graphite = new G4Material(name="graphite",
 										density=2.27*g/cm3,
@@ -70,23 +75,32 @@ void MyDetectorConstruction::DefineMaterials()
 	graphite->AddElement(C12element.release(), atomsPerMolecule=1);
 
 	// pressurized water
-	auto H {make_unique<G4Element>("Hydrogen", symbol="H", atomicNumber=1, molarMass=1.0079*g/mole)};
-	auto O {make_unique<G4Element>("Oxygen", symbol="O", atomicNumber=8, molarMass=16.00*g/mole)};
+	auto H {make_unique<G4Element>("Hydrogen", symbol="H",
+									atomicNumber=1,
+									molarMass=1.0079*g/mole)};
+	auto O {make_unique<G4Element>("Oxygen", symbol="O",
+									atomicNumber=8,
+									molarMass=16.00*g/mole)};
 	G4Material *H2Opressurised = new G4Material(name="pressurised water",
-									density=1.000*g/cm3,
-									numberOfComponents=2,
-									kStateLiquid,
-									temperature=593*kelvin,
-									pressure=150*bar);
+												density=1.000*g/cm3,
+												numberOfComponents=2,
+												kStateLiquid,
+												temperature=593*kelvin,
+												pressure=150*bar);
 	H2Opressurised->AddElement(H.release(), atomsPerMolecule=2);
 	H2Opressurised->AddElement(O.release(), atomsPerMolecule=1);
 	H2Opressurised->GetIonisation()->SetMeanExcitationEnergy(78.0*eV);
 
 	// heavy water
-	auto Deuteron {make_unique<G4Isotope>("Deuteron", atomicNumber=1, nucleonsPerNucleus=2)};
-	auto Deuterium {make_unique<G4Element>("Deuterium", symbol="D", numberOfIsotopes=1)};
+	auto Deuteron {make_unique<G4Isotope>("Deuteron",
+										atomicNumber=1,
+										nucleonsPerNucleus=2)};
+	auto Deuterium {make_unique<G4Element>("Deuterium", symbol="D",
+										numberOfIsotopes=1)};
 //	redefine oxygen since it has been released above
-	O = make_unique<G4Element>("Oxygen", symbol="O", atomicNumber=8, molarMass=16.00*g/mole);
+	O = make_unique<G4Element>("Oxygen", symbol="O",
+								atomicNumber=8,
+								molarMass=16.00*g/mole);
 	Deuterium->AddIsotope(Deuteron.release(), relativeAbundance=100*perCent);
 	G4Material *D2O = new G4Material(name="heavy water",
 									density=1.11*g/cm3,
@@ -99,7 +113,7 @@ void MyDetectorConstruction::DefineMaterials()
 
 //	Prevent changing materials to default values if they were adjusted at run time:
 //	i.e. in case G4RunManager::GetRunManager()->ReinitializeGeometry() is invoked by
-//	some user command, such as ...
+//	some user command, such as /rotate/,,,
 	if (labMaterial == nullptr)
 		labMaterial = ChooseMaterialFromNISTdatabase(Material::G4air);
 	if (trapezoidMaterial == nullptr)
@@ -173,7 +187,7 @@ G4VPhysicalVolume* MyDetectorConstruction::BuildLab()
 									"Lab");      //name
 
 //	Uncomment below if you don't want to visualise the lab box
-	logicalLab->SetVisAttributes(ChooseColour(Colour::invisible).release());
+//	logicalLab->SetVisAttributes(ChooseColour(Colour::invisible).release());
 
 	return new G4PVPlacement(nullptr,	   	 // no rotation
 							G4ThreeVector(), // at (0,0,0)
@@ -230,14 +244,13 @@ unique_ptr<G4VPhysicalVolume> MyDetectorConstruction::BuildTrapezoid()
 
 unique_ptr<G4VPhysicalVolume> MyDetectorConstruction::BuildSphere()
 {
-	solidSphere = make_unique<G4Sphere>
-							("Sphere",	   // name
-							0, 			   // innerRadius,
-							2.5*cm,		   // outerRadius,
-							0*deg,         // Starting phi
-							360*deg,       // Delta phi
-							0*deg,         // Starting theta
-							180*deg);      // Delta theta
+	G4double innerRadius {0}, outerRadius {2.5*cm};
+	G4double startPhi {0}, endPhi {360*deg};
+	G4double startTheta {0}, endTheta {180*deg};
+	solidSphere = make_unique<G4Sphere>("Sphere",	   			// name
+										innerRadius, outerRadius,
+										startPhi, endPhi,
+										startTheta, endTheta);
 
 	logicalSphere = make_unique<G4LogicalVolume>
 								(solidSphere.get(),	// convert to raw pointer
@@ -298,8 +311,7 @@ unique_ptr<G4VPhysicalVolume> MyDetectorConstruction::BuildTetrahedron()
 						G4ThreeVector(4*cm, 2*cm, 1*cm), // at (x, y, z)
 						logicalTetrahedron.get(), 		 // convert to raw pointer
 						"Tetrahedron",     				 // name
-						logicalTrapezoid.get(), // NB: NOT logicalLab for mother volume
-//						logicalLab,
+						logicalTrapezoid.get(), // NB: NOT logicalLab for mother volume since inside trapezoid
 						false,           		// no boolean operations
 						0,               		// copy number 0
 						checkOverlaps); 		// checking overlaps
@@ -321,14 +333,18 @@ unique_ptr<G4VPhysicalVolume> MyDetectorConstruction::BuildTorus()
 							torusMaterial,	   // it's a raw pointer
 							"Torus");
 
-	logicalTorus->SetVisAttributes(ChooseColour(Colour::magenta, Texture::wireframe).release());
+	logicalTorus->SetVisAttributes(ChooseColour(Colour::magenta,
+												Texture::wireframe).release());
 
-	unique_ptr<G4RotationMatrix> rotation {make_unique<G4RotationMatrix>()};
-	rotation->rotateY(-55*deg);
-	rotation->rotateZ(55*deg);
+//	unique_ptr<G4RotationMatrix> rotation {make_unique<G4RotationMatrix>()};
+	G4RotationMatrix *rotation = new G4RotationMatrix();
+	rotation->rotateX(rotationAngleX);
+	rotation->rotateY(rotationAngleY);
+	rotation->rotateZ(rotationAngleZ);
 
 	return make_unique<G4PVPlacement>
-					(rotation.release(), // give up ownership of rotation pointer
+//					(rotation.release(), // give up ownership of rotation pointer
+					(rotation,
 					G4ThreeVector(14*cm, 9*cm, 6*cm), // at (x,y,z)
 					logicalTorus.get(),				  // its logical volume
 					"Torus",		   				  // its name
@@ -453,6 +469,19 @@ unique_ptr<G4VisAttributes> MyDetectorConstruction::
 	return chosenColour;
 }
 
+void MyDetectorConstruction::SetActiveRotationAngles(G4double rotationAngleX,
+													G4double rotationAxisY,
+													G4double rotationAxisZ)
+{
+	this->rotationAngleX = rotationAngleX;
+	this->rotationAngleY = rotationAngleY;
+	this->rotationAngleZ = rotationAngleZ;
+//  Rotation effective immediately; removes beam:
+//	G4RunManager::GetRunManager()->DefineWorldVolume(Construct());
+//  Rotation takes effect upon: /run/beamOn
+	G4RunManager::GetRunManager()->ReinitializeGeometry();
+}
+
 void MyDetectorConstruction::SetLabMaterial(const G4String& newMaterialName)
 {
 	G4Material *ptrToMaterial = G4NistManager::Instance()->FindOrBuildMaterial(newMaterialName);
@@ -567,27 +596,6 @@ void MyDetectorConstruction::SetConeMaterial(const G4String& newMaterialName)
 	}
 }
 
-void MyDetectorConstruction::DisplayMaterialLabelsViaG4Text()
-{
-	G4VVisManager* pVisManager = G4VVisManager::GetConcreteInstance();
-	if (pVisManager)
-	{
-		G4UImanager::GetUIpointer()->ApplyCommand("/vis/scene/notifyHandlers");
-
-		G4Text labelLab(labMaterial->GetName(), G4ThreeVector(-19*cm, -19*cm, -19*cm));
-		labelLab.SetVisAttributes(ChooseColour(Colour::white).release());
-		labelLab.SetScreenSize(12);
-		pVisManager->Draw(labelLab);
-
-		G4Text labelTrapezoid(trapezoidMaterial->GetName(), G4ThreeVector(-4*cm, 1*cm, 0*cm));
-		labelTrapezoid.SetVisAttributes(ChooseColour(Colour::white).release());
-		labelTrapezoid.SetScreenSize(12);
-		pVisManager->Draw(labelTrapezoid);
-
-		G4UImanager::GetUIpointer()->ApplyCommand("/vis/viewer/update");
-	}
-}
-
 void MyDetectorConstruction::DisplayMaterialLabelsViaMacroFile()
 {
 	G4String fileName = "./vis-materialLabels.macro";
@@ -607,20 +615,25 @@ void MyDetectorConstruction::DisplayMaterialLabelsViaMacroFile()
 		outFile << "/vis/scene/add/text 0 4 0 cm 10 0 0 "
 				<< trapezoidMaterial->GetName() << G4endl;
 
-//		outFile << "#SphereMaterial" << G4endl;
-//		outFile << "/vis/set/textColour white" << G4endl;
-//		outFile << "/vis/scene/add/text 0 1 0 cm 10 0 0 "
-//				<< sphereMaterial->GetName() << G4endl;
-//
-//		outFile << "#TorusMaterial" << G4endl;
-//		outFile << "/vis/set/textColour white" << G4endl;
-//		outFile << "/vis/scene/add/text 14 9 6 cm 10 0 0 "
-//				<< torusMaterial->GetName() << G4endl;
-//
-//		outFile << "#ConeMaterial" << G4endl;
-//		outFile << "/vis/set/textColour white" << G4endl;
-//		outFile << "/vis/scene/add/text -13 0 0 cm 10 0 0 "
-//				<< coneMaterial->GetName() << G4endl;
+		outFile << "#SphereMaterial" << G4endl;
+		outFile << "/vis/set/textColour white" << G4endl;
+		outFile << "/vis/scene/add/text 0 -1.5 0 cm 10 0 0 "
+				<< sphereMaterial->GetName() << G4endl;
+
+		outFile << "#TetrahedronMaterial" << G4endl;
+		outFile << "/vis/set/textColour white" << G4endl;
+		outFile << "/vis/scene/add/text 4 2 1 cm 10 0 0 "
+				<< tetrahedronMaterial->GetName() << G4endl;
+
+		outFile << "#TorusMaterial" << G4endl;
+		outFile << "/vis/set/textColour white" << G4endl;
+		outFile << "/vis/scene/add/text 14 9 6 cm 10 0 0 "
+				<< torusMaterial->GetName() << G4endl;
+
+		outFile << "#ConeMaterial" << G4endl;
+		outFile << "/vis/set/textColour white" << G4endl;
+		outFile << "/vis/scene/add/text -13 0 0 cm 10 0 0 "
+				<< coneMaterial->GetName() << G4endl;
 
 //		outFile << "#Scale interval set to yellow colour:" << G4endl;
 //		outFile << "/vis/set/textColour yellow" << G4endl;

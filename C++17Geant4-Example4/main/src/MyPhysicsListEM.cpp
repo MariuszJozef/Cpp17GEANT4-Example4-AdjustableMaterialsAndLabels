@@ -78,9 +78,9 @@ void MyPhysicsListEM::ConstructEM()
 		}
 	}
 
-//	unique_ptr<G4VAtomDeexcitation> deexcitation {make_unique<G4UAtomicDeexcitation>()};
-//	deexcitation->SetFluo(true);
-//	deexcitation->SetAuger(false);
-//	deexcitation->SetPIXE(false);
-//	G4LossTableManager::Instance()->SetAtomDeexcitation(deexcitation.release());
+	unique_ptr<G4VAtomDeexcitation> deexcitation {make_unique<G4UAtomicDeexcitation>()};
+	deexcitation->SetFluo(true);
+	deexcitation->SetAuger(false);
+	deexcitation->SetPIXE(false);
+	G4LossTableManager::Instance()->SetAtomDeexcitation(deexcitation.release());
 }

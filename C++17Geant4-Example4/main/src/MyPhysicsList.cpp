@@ -1,16 +1,5 @@
 #include "MyPhysicsList.hh"
-#include "MyPhysicsListEM.hh"
 #include "G4ParticleTypes.hh"
-
-MyPhysicsList::MyPhysicsList()
-: G4VModularPhysicsList()
-, myPhysicsListEM(std::make_unique<MyPhysicsListEM>())
-{
-	SetCutsWithDefault();
-	SetVerboseLevel(0);
-}
-
-//MyPhysicsList::~MyPhysicsList() {}
 
 void MyPhysicsList::ConstructParticle()
 {
@@ -30,8 +19,6 @@ void MyPhysicsList::ConstructProcess()
 
 void MyPhysicsList::SetCuts()
 {
-//	G4int temp = GetVerboseLevel();
 	SetVerboseLevel(0);
 	SetCutsWithDefault();
-//	SetVerboseLevel(temp);
 }

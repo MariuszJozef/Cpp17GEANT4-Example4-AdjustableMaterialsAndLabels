@@ -2,23 +2,22 @@
 #define MYPHYSICSLIST_HH_
 
 #include "G4VModularPhysicsList.hh"
-#include "globals.hh"
+#include "MyPhysicsListEM.hh"
 
 class G4VPhysicsConstructor;
 
+using std::unique_ptr;
+using std::make_unique;
+
 class MyPhysicsList final: public G4VModularPhysicsList
 {
-public:
-	MyPhysicsList();
-//	~MyPhysicsList();
-
 protected:
 	void ConstructParticle() override;
 	void ConstructProcess() override;
 	void SetCuts() override;
 
 private:
-	std::unique_ptr<G4VPhysicsConstructor> myPhysicsListEM {nullptr};
+	unique_ptr<G4VPhysicsConstructor> myPhysicsListEM {make_unique<MyPhysicsListEM>()};
 };
 
 #endif /* MYPHYSICSLIST_HH_ */
