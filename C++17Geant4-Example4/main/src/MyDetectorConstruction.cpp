@@ -45,6 +45,7 @@ void MyDetectorConstruction::DefineMaterials()
 //		/materials/trapezoid Titanium
 //	etc, (cf. MyDetectorMessenger.cpp) - otherwise get "Material not found" message.
 
+	// DO NOT convert G4Material to raw pointers!
 	G4Material *Al = new G4Material(name="aluminium", atomicNumber=13, molarMass=26.98*g/mole, density=2.7*g/cm3);
 	G4Material *Pb = new G4Material(name="lead", atomicNumber=82, molarMass= 207.19*g/mole, density= 11.35*g/cm3);
 	G4Material *Ti = new G4Material(name="titanium", atomicNumber=22, molarMass=47.867*g/mole, density=4.54*g/cm3);
@@ -172,8 +173,7 @@ G4VPhysicalVolume* MyDetectorConstruction::BuildLab()
 									"Lab");      //name
 
 //	Uncomment below if you don't want to visualise the lab box
-//	logicalLab->SetVisAttributes(ChooseColour(Colour::invisible).release());
-//	logicalLab->SetVisAttributes(invisible);
+	logicalLab->SetVisAttributes(ChooseColour(Colour::invisible).release());
 
 	return new G4PVPlacement(nullptr,	   	 // no rotation
 							G4ThreeVector(), // at (0,0,0)
@@ -211,7 +211,7 @@ unique_ptr<G4VPhysicalVolume> MyDetectorConstruction::BuildTrapezoid()
 //						G4ThreeVector(), 		// at (x,y,z)
 //						"Trapezoid",     		// name
 //						logicalTrapezoid.get(),	// logical volume
-//						physicalLab.get(), 		// physical mother volume
+//						physicalLab.get(), 		// PHYSICAL mother volume
 //						false,           		// no boolean operations
 //						0,               		// copy number
 //						checkOverlaps); 		// checking overlaps
@@ -222,7 +222,7 @@ unique_ptr<G4VPhysicalVolume> MyDetectorConstruction::BuildTrapezoid()
 						G4ThreeVector(), 		// at (0, 0, 0)
 						logicalTrapezoid.get(),	// convert to raw pointer
 						"Trapezoid",     		// name
-						logicalLab,		 		// logical mother volume
+						logicalLab,		 		// LOGICAL mother volume
 						false,           		// no boolean operations
 						0,               		// copy number
 						checkOverlaps); 		// checking overlaps
@@ -241,7 +241,7 @@ unique_ptr<G4VPhysicalVolume> MyDetectorConstruction::BuildSphere()
 
 	logicalSphere = make_unique<G4LogicalVolume>
 								(solidSphere.get(),	// convert to raw pointer
-								sphereMaterial, 	// convert to raw pointer
+								sphereMaterial, 	// it is a raw pointer
 								"Sphere");
 
 	logicalSphere->SetVisAttributes(
@@ -280,9 +280,10 @@ unique_ptr<G4VPhysicalVolume> MyDetectorConstruction::BuildTetrahedron()
 	solidTetrahedron = make_unique<G4Tet>("Tetrahedron",
 										vertex1, vertex2, vertex3, vertex4);
 
-	logicalTetrahedron = make_unique<G4LogicalVolume>(solidTetrahedron.get(),
-													 tetrahedronMaterial,
-													 "Tetrahedron");
+	logicalTetrahedron = make_unique<G4LogicalVolume>
+									(solidTetrahedron.get(),// convert to raw pointer
+									tetrahedronMaterial,	// it's a raw pointer
+									"Tetrahedron");
 
 	logicalTetrahedron->SetVisAttributes(
 			ChooseColour(Colour::brown, Texture::solid).release());
@@ -317,7 +318,7 @@ unique_ptr<G4VPhysicalVolume> MyDetectorConstruction::BuildTorus()
 
 	logicalTorus = make_unique<G4LogicalVolume>
 							(solidTorus.get(), // convert to raw pointer
-							torusMaterial,	   // convert to raw pointer
+							torusMaterial,	   // it's a raw pointer
 							"Torus");
 
 	logicalTorus->SetVisAttributes(ChooseColour(Colour::magenta, Texture::wireframe).release());
@@ -352,7 +353,7 @@ unique_ptr<G4VPhysicalVolume> MyDetectorConstruction::BuildCone()
 
 	logicalCone = make_unique<G4LogicalVolume>
 								(solidCone.get(),	// convert to raw pointer
-								coneMaterial,		// convert to raw pointer
+								coneMaterial,		// it is a raw pointer
 								"Cone");
 
 	logicalCone->SetVisAttributes(ChooseColour(Colour::cyan, Texture::solid).release());
@@ -362,7 +363,7 @@ unique_ptr<G4VPhysicalVolume> MyDetectorConstruction::BuildCone()
 						G4ThreeVector(-13*cm, 0, 0), // at (x,y,z)
 						logicalCone.get(),			 // logical volume
 						"Cone",		      			 // name
-						logicalLab,			    	 // logical mother volume - it's a raw pointer
+						logicalLab,		// logical mother volume - it's a raw pointer
 						false,           			 // no boolean operations
 						0,               			 // copy number
 						checkOverlaps); 			 // checking overlaps
@@ -427,7 +428,7 @@ unique_ptr<G4VisAttributes> MyDetectorConstruction::
 		}
 		case Colour::invisible:
 		{
-			chosenColour = make_unique<G4VisAttributes>(G4Colour(1, 1, 1, opacity));
+			chosenColour = make_unique<G4VisAttributes>(G4Colour(0, 0, 0, opacity));
 			isVisible = false;
 			break;
 		}

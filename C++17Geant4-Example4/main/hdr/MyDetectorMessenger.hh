@@ -29,7 +29,7 @@ private:
 	unique_ptr<G4UIcmdWithAString> coneMaterialUICommand {nullptr};
 
 private:
-	G4String& ConvertSynonymousMaterialNames(G4String& newValue);
+	G4String& ConvertToSynonymousMaterialName(G4String& newValue);
 };
 
 #endif /* HDR_MYDETECTORMESSENGER_HH_ */

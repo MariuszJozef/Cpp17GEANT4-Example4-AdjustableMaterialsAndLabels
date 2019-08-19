@@ -68,7 +68,7 @@ private:
 	G4Material *torusMaterial {nullptr};
 	G4Material *coneMaterial {nullptr};
 
-	G4Box *solidLab {nullptr}; // MUST be a raw pointer otherwise changing materials fails
+	G4Box *solidLab {nullptr}; // MUST be a raw pointer otherwise changing materials fails, i.e. a short dump upon e.g. /material/trapezoid ... followed by /run/beamOn
 	unique_ptr<G4Trd> solidTrapezoid {nullptr};
 	unique_ptr<G4Sphere> solidSphere {nullptr};
 	unique_ptr<G4Tet> solidTetrahedron {nullptr};

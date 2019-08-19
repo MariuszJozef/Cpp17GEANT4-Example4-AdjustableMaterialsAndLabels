@@ -42,7 +42,7 @@ MyDetectorMessenger::MyDetectorMessenger(MyDetectorConstruction* myDetectorConst
 
 void MyDetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 {
-	newValue = ConvertSynonymousMaterialNames(newValue);
+	newValue = ConvertToSynonymousMaterialName(newValue);
 	if (command == labMaterialUICommand.get())
 	{
 		myDetectorConstruction->SetLabMaterial(newValue);
@@ -101,7 +101,7 @@ G4String MyDetectorMessenger::GetCurrentValue(G4UIcommand* command)
 	return currentValue;
 }
 
-G4String& MyDetectorMessenger::ConvertSynonymousMaterialNames(G4String& newValue)
+G4String& MyDetectorMessenger::ConvertToSynonymousMaterialName(G4String& newValue)
 {
 	if (newValue == "vacuum")
 	{

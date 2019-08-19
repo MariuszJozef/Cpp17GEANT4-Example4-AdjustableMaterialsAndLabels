@@ -1,0 +1,15 @@
+/run/beamOn 3
+/material/sphere G4_Ag
+/material/trapezoid concrete
+/material/tetrahedron bone
+/run/beamOn 3
+
+/gun/position 5 -8 14 cm
+/gun/direction 0 0 0
+/beam/randomDistribution gaussian 0.1
+/run/beamOn 5
+/gun/direction/aimAtPosition 4 2 1 cm
+/beam/dispersionOn false
+/run/beamOn 3
+
+
