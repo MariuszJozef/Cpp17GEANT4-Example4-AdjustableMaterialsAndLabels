@@ -1,22 +1,22 @@
 #LabMaterial
 /vis/set/textColour white
-/vis/scene/add/text -18 -18 -18 cm 10 0 0 G4_AIR
+/vis/scene/add/text -18 -18 -18 cm 10 0 0 G4_WATER
 #TrapezoidMaterial
 /vis/set/textColour white
-/vis/scene/add/text 0 4 0 cm 10 0 0 aluminium
+/vis/scene/add/text 0 4 0 cm 10 0 0 G4_CONCRETE
 #SphereMaterial
 /vis/set/textColour white
-/vis/scene/add/text 0 -1.5 0 cm 10 0 0 G4_Au
+/vis/scene/add/text 0 -1.5 0 cm 10 0 0 G4_Ag
 #TetrahedronMaterial
 /vis/set/textColour white
-/vis/scene/add/text 4 2 0 cm 10 0 0 G4_Ag
+/vis/scene/add/text 4 2 0 cm 10 0 0 G4_BONE_COMPACT_ICRU
 #TorusMaterial
 /vis/set/textColour white
-/vis/scene/add/text 14 9 6 cm 10 0 0 heavy water
+/vis/scene/add/text 14 9 6 cm 10 0 0 G4_TISSUE_SOFT_ICRP
 #ConeMaterial
 /vis/set/textColour white
-/vis/scene/add/text -13 0 0 cm 10 0 0 G4_Galactic
+/vis/scene/add/text -13 0 0 cm 10 0 0 G4_SKIN_ICRP
 #ParticleGun:
 /vis/set/textColour cyan
-/vis/scene/add/text2D -0.9 0.7 12 ! ! gun particle: e-
-/vis/scene/add/text2D -0.9 0.6 12 ! ! gun energy: 25 MeV
+/vis/scene/add/text2D -0.9 0.7 12 ! ! gun particle: gamma
+/vis/scene/add/text2D -0.9 0.6 12 ! ! gun energy: 32 MeV

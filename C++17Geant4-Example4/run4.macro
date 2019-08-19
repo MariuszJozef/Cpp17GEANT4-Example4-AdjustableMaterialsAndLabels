@@ -1,0 +1,15 @@
+# At GUI command prompt type: /control/execute run4.macro
+
+/gun/particle proton
+/gun/energy 50 MeV
+/gun/position 0 0 -20 cm
+/gun/direction 0 0 0 	# aims at origin; same as /gun/direction/aimAtPosition 0 0 0 cm
+/material/lab steam
+/material/sphere G4_Ag
+/material/trapezoid concrete
+/material/tetrahedron vacuum
+/run/beamOn 20
+
+#/material/lab heavy water
+#/gun/particle anti_proton
+#/run/beamOn 10

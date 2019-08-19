@@ -63,6 +63,7 @@ private:
 	G4ParticleDefinition *positron {nullptr};
 	G4ParticleDefinition *gamma {nullptr};
 	G4ParticleDefinition *proton {nullptr};
+	G4ParticleDefinition *antiProton {nullptr};
 };
 
 #endif /* MYPRIMARYGENERATORACTION_HH_ */

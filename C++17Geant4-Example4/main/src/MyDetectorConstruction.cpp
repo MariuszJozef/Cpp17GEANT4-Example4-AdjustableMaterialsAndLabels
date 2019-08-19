@@ -17,7 +17,7 @@ MyDetectorConstruction::MyDetectorConstruction()
 , sphereMaterial 	  	{ChooseMaterial("G4_Au")}
 , tetrahedronMaterial 	{ChooseMaterial("G4_Ag")}
 , torusMaterial 		{ChooseMaterial(MaterialCustomBuilt::heavyWater)}
-, coneMaterial 			{ChooseMaterial(MaterialNISTdatabase::G4vacuum)}
+, coneMaterial 			{ChooseMaterial(MaterialNISTdatabase::G4skinICRP)}
 {}
 
 G4VPhysicalVolume* MyDetectorConstruction::Construct()

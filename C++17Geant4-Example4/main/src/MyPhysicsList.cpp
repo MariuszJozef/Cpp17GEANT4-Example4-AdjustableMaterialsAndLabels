@@ -9,6 +9,7 @@ void MyPhysicsList::ConstructParticle()
 	G4Electron::ElectronDefinition();
 	G4Positron::PositronDefinition();
 	G4Proton::ProtonDefinition();
+	G4AntiProton::AntiProtonDefinition();
 }
 
 void MyPhysicsList::ConstructProcess()

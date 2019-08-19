@@ -21,6 +21,7 @@ MyPrimaryGeneratorAction::MyPrimaryGeneratorAction(const G4ThreeVector& halfLabS
 	positron = particleTable->FindParticle(particleName="e+");
 	gamma = particleTable->FindParticle(particleName="gamma");
 	proton = particleTable->FindParticle(particleName="proton");
+	antiProton = particleTable->FindParticle(particleName="anti_proton");
 
 	G4ParticleDefinition *particle {electron};
 

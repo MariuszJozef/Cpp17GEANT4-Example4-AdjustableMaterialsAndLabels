@@ -1,0 +1,11 @@
+# At GUI command prompt type: /control/execute run3.macro
+
+/beam/randomDistribution uniform 0.2
+/beam/dispersionOn true
+/gun/particle gamma
+/gun/energy 32 MeV
+/material/lab water
+/material/cone skin
+/material/tetrahedron bone
+/material/torus soft tissue
+/run/beamOn 20
