@@ -18,6 +18,7 @@ public:
 	void EndOfRunAction(const G4Run* run) override;
 
 private:
+	void DisplayGunInfoViaMacroFile();
 	void DisplayMaterialLabelsViaApplyCommand();
 
 private:

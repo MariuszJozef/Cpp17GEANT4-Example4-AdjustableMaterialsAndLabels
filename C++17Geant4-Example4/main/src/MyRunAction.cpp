@@ -14,7 +14,39 @@ MyRunAction::MyRunAction(MyDetectorConstruction *myDetectorConstruction,
 
 void MyRunAction::EndOfRunAction(const G4Run* run)
 {
-//	DisplayMaterialLabelsViaApplyCommand();
+//	DisplayMaterialLabelsViaApplyCommand(); // labels sometimes get blurred ???
+	myDetectorConstruction->DisplayMaterialLabelsViaMacroFile();
+	DisplayGunInfoViaMacroFile();
+
+	G4UImanager::GetUIpointer()->ApplyCommand("/control/execute vis-reInit.macro");
+}
+
+void MyRunAction::DisplayGunInfoViaMacroFile()
+{
+	G4String fileName = "./vis-particleGunLabels.macro";
+
+	std::ofstream outFile;
+	outFile.open(fileName);
+	// Create and write to the file if it doesn't exit, otherwise overwrite it
+	if (outFile.is_open())
+	{
+		outFile << "#ParticleGun:" << G4endl;
+		outFile << "/vis/set/textColour cyan" << G4endl;
+		outFile << "/vis/scene/add/text2D -0.9 0.7 12 ! ! gun particle: "
+				+ myPrimaryGeneratorAction->GetGunParticleName() << G4endl;
+		outFile << "/vis/scene/add/text2D -0.9 0.6 12 ! ! gun energy: "
+				+ myPrimaryGeneratorAction->GetGunEnergyAndUnit() << G4endl;
+
+//		outFile << "#Scale interval set to yellow colour:" << G4endl;
+//		outFile << "/vis/set/textColour yellow" << G4endl;
+//		outFile << "/vis/scene/add/scale" << G4endl;
+//
+		outFile.close();
+	}
+	else
+	{
+		G4cerr << "Could not create file " << fileName << G4endl;
+	}
 }
 
 void MyRunAction::DisplayMaterialLabelsViaApplyCommand()

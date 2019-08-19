@@ -1,13 +1,12 @@
 #/run/initialize
 #/vis/open OGL 600x600-0+0
-#/vis/open HepRepFile
 /vis/drawVolume
 # Specify view angle:
 /vis/viewer/set/viewpointThetaPhi 70. 150.
 # Specify zoom value:
 /vis/viewer/zoom 1
 
-/vis/scene/add/scale   # Simple scale line
+#/vis/scene/add/scale   # Simple scale line
 /vis/scene/add/axes    # Simple axes: x=red, y=green, z=blue.
 /vis/scene/add/eventID # Displays run and event
 
@@ -28,6 +27,5 @@
 #/vis/modeling/trajectories/drawByParticleID-0/set e- yellow
 
 /control/execute vis-staticLabels.macro
-/control/execute vis-dynamicLabels.macro
-#/control/execute vis-materialLabels.macro
-#/control/execute vis-particleGunLabels.macro
+/control/execute vis-materialLabels.macro
+/control/execute vis-particleGunLabels.macro

@@ -8,6 +8,7 @@
 #include "G4NistManager.hh"
 #include "G4VisAttributes.hh"
 #include "G4RunManager.hh"
+#include "G4UImanager.hh"
 
 G4VPhysicalVolume* MyDetectorConstruction::Construct()
 {
@@ -620,6 +621,10 @@ void MyDetectorConstruction::DisplayMaterialLabelsViaMacroFile()
 //		outFile << "/vis/set/textColour yellow" << G4endl;
 
 		outFile.close();
+
+//		G4UImanager *uiManager {G4UImanager::GetUIpointer()};
+//		uiManager->ApplyCommand("/control/execute vis-reInit.macro");
+//		uiManager->ApplyCommand("/control/execute vis-materialLabels.macro");
 	}
 	else
 	{

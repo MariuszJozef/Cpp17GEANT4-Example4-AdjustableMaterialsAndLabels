@@ -26,9 +26,6 @@
 #/vis/modeling/trajectories/drawByParticleID-0/default/setStepPtsSize 5
 #/vis/modeling/trajectories/drawByParticleID-0/set e- yellow
 
-#/control/execute vis-staticLabels.macro
+/control/execute vis-staticLabels.macro
 #/control/execute vis-materialLabels.macro
-# temporary for testing only
-#/control/execute vis-staticLabels.macro
-#/control/execute vis-dynamicLabels.macro
 
