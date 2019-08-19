@@ -28,47 +28,6 @@ MyDetectorMessenger::MyDetectorMessenger(MyDetectorConstruction* myDetectorConst
 	coneMaterialUICommand->SetGuidance("Set cone material");
 	coneMaterialUICommand->SetParameterName("newConeMaterial",false);
 	coneMaterialUICommand->AvailableForStates(G4State_PreInit,G4State_Idle);
-
-	activeRotationAxisAngleUICommand->SetGuidance(
-				"Set rotation axis and angle: x, y, z, angle, angularUnit");
-
-//	G4UIparameter *activeRotationAngleAboutXaxis
-	G4UIparameter *activeRotationAngleAboutXaxis
-		= new G4UIparameter("rotationAngleAboutXaxis", 'd', false);
-	activeRotationAngleAboutXaxis->SetGuidance("rotation angle about x axis");
-	activeRotationAngleAboutXaxis->SetParameterName("rotationAngleAboutXaxis"); // redundant?
-	activeRotationAxisAngleUICommand->SetParameter(activeRotationAngleAboutXaxis);
-
-	G4UIparameter *activeRotationAngleAboutYaxis
-		= new G4UIparameter("rotationAngleAboutYaxis", 'd', false);
-	activeRotationAngleAboutYaxis->SetGuidance("rotation angle about y axis");
-	activeRotationAngleAboutYaxis->SetParameterName("rotationAngleAboutYaxis"); // redundant?
-	activeRotationAxisAngleUICommand->SetParameter(activeRotationAngleAboutYaxis);
-
-	G4UIparameter *activeRotationAngleAboutZaxis
-		= new G4UIparameter("rotationAngleAboutZaxis", 'd', false);
-	activeRotationAngleAboutZaxis->SetGuidance("rotation angle about z axis");
-	activeRotationAngleAboutZaxis->SetParameterName("rotationAngleAboutZaxis"); // redundant?
-	activeRotationAxisAngleUICommand->SetParameter(activeRotationAngleAboutZaxis);
-
-	G4UIparameter *activeRotationAngleUnit = new G4UIparameter("rotationAngleUnit", 's',
-				false);
-	activeRotationAngleUnit->SetGuidance("Unit of rotation angle: deg or rad");
-	// activeRotationAngleUnit->SetParameterName("rotationAngleUnit");
-	G4String angleUnitList = G4UIcommand::UnitsList(G4UIcommand::CategoryOf("deg"));
-	angleUnitList += " ";
-	angleUnitList += G4UIcommand::UnitsList(G4UIcommand::CategoryOf("rad"));
-	activeRotationAngleUnit->SetParameterCandidates(angleUnitList);
-	//	activeRotationAngleUnit->SetDefaultUnit("deg"); // doesn't exist
-	activeRotationAxisAngleUICommand->SetParameter(activeRotationAngleUnit);
-
-	activeRotationAxisAngleUICommand->AvailableForStates(G4State_PreInit, G4State_Idle);
-	activeRotationAxisAngleUICommand->SetToBeBroadcasted(false);
-}
-
-MyDetectorMessenger::~MyDetectorMessenger()
-{
-	delete activeRotationAxisAngleUICommand;
 }
 
 void MyDetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
@@ -97,21 +56,6 @@ void MyDetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 	else if (command == coneMaterialUICommand.get())
 	{
 		myDetectorConstruction->SetConeMaterial(newValue);
-	}
-	else if (command == activeRotationAxisAngleUICommand)
-	{
-		G4double rotationAngleX, rotationAngleY, rotationAngleZ;
-		G4String rotationAngleUnit;
-
-		std::istringstream is(newValue);
-		is >> rotationAngleX >> rotationAngleY >> rotationAngleZ >> rotationAngleUnit;
-
-		rotationAngleX *= G4UIcommand::ValueOf(rotationAngleUnit);
-		rotationAngleY *= G4UIcommand::ValueOf(rotationAngleUnit);
-		rotationAngleZ *= G4UIcommand::ValueOf(rotationAngleUnit);
-
-		myDetectorConstruction->SetActiveRotationAngles(rotationAngleX,
-														rotationAngleY, rotationAngleZ);
 	}
 }
 

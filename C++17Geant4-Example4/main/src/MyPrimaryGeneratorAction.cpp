@@ -9,12 +9,8 @@
 #include "Randomize.hh"
 #include "G4RunManager.hh"
 
-using std::make_unique;
-
-MyPrimaryGeneratorAction::MyPrimaryGeneratorAction(G4ThreeVector halfLabSize)
+MyPrimaryGeneratorAction::MyPrimaryGeneratorAction(const G4ThreeVector& halfLabSize)
 : G4VUserPrimaryGeneratorAction()
-, myPrimaryGeneratorMessenger {make_unique<MyPrimaryGeneratorMessenger>(this)}
-, particleGun {make_unique<G4ParticleGun>(1)}
 , halfLabSize {halfLabSize}
 , gunPosition {G4ThreeVector(0, 0, -halfLabSize.z())}
 {
@@ -32,8 +28,6 @@ MyPrimaryGeneratorAction::MyPrimaryGeneratorAction(G4ThreeVector halfLabSize)
 	particleGun->SetParticleEnergy(gunEnergy);
 	particleGun->SetParticlePosition(gunPosition);
 }
-
-//MyPrimaryGeneratorAction::~MyPrimaryGeneratorAction() {}
 
 void MyPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
@@ -60,10 +54,6 @@ void MyPrimaryGeneratorAction::SetGunPosition(const G4ThreeVector& gunPosition)
 	if (IsGunInsideLab(gunPosition))
 	{
 		this->gunPosition = gunPosition;
-		// Takes effect upon: /run/beamOn
-//		G4RunManager::GetRunManager()->ReinitializeGeometry();
-		// Effective immediately; removes beam
-//		G4RunManager::GetRunManager()->DefineWorldVolume(Construct());
 	}
 	else
 	{

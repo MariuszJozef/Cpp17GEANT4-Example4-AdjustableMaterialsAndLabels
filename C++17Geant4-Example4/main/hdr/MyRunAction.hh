@@ -2,7 +2,6 @@
 #define HDR_MYRUNACTION_HH_
 
 #include "G4UserRunAction.hh"
-//#include "globals.hh"
 
 class G4Run;
 class MyDetectorConstruction;

@@ -111,9 +111,6 @@ void MyDetectorConstruction::DefineMaterials()
 	D2O->AddElement(Deuterium.release(), atomsPerMolecule=2);
 	D2O->AddElement(O.release(), atomsPerMolecule=1);
 
-//	Prevent changing materials to default values if they were adjusted at run time:
-//	i.e. in case G4RunManager::GetRunManager()->ReinitializeGeometry() is invoked by
-//	some user command, such as /rotate/,,,
 	if (labMaterial == nullptr)
 		labMaterial = ChooseMaterialFromNISTdatabase(Material::G4air);
 	if (trapezoidMaterial == nullptr)
@@ -336,15 +333,12 @@ unique_ptr<G4VPhysicalVolume> MyDetectorConstruction::BuildTorus()
 	logicalTorus->SetVisAttributes(ChooseColour(Colour::magenta,
 												Texture::wireframe).release());
 
-//	unique_ptr<G4RotationMatrix> rotation {make_unique<G4RotationMatrix>()};
-	G4RotationMatrix *rotation = new G4RotationMatrix();
-	rotation->rotateX(rotationAngleX);
-	rotation->rotateY(rotationAngleY);
-	rotation->rotateZ(rotationAngleZ);
+	unique_ptr<G4RotationMatrix> rotation {make_unique<G4RotationMatrix>()};
+	rotation->rotateY(-55*deg);
+	rotation->rotateZ(55*deg);
 
 	return make_unique<G4PVPlacement>
-//					(rotation.release(), // give up ownership of rotation pointer
-					(rotation,
+					(rotation.release(), // give up ownership of rotation pointer
 					G4ThreeVector(14*cm, 9*cm, 6*cm), // at (x,y,z)
 					logicalTorus.get(),				  // its logical volume
 					"Torus",		   				  // its name
@@ -467,19 +461,6 @@ unique_ptr<G4VisAttributes> MyDetectorConstruction::
 
 	chosenColour->SetVisibility(isVisible);
 	return chosenColour;
-}
-
-void MyDetectorConstruction::SetActiveRotationAngles(G4double rotationAngleX,
-													G4double rotationAxisY,
-													G4double rotationAxisZ)
-{
-	this->rotationAngleX = rotationAngleX;
-	this->rotationAngleY = rotationAngleY;
-	this->rotationAngleZ = rotationAngleZ;
-//  Rotation effective immediately; removes beam:
-//	G4RunManager::GetRunManager()->DefineWorldVolume(Construct());
-//  Rotation takes effect upon: /run/beamOn
-	G4RunManager::GetRunManager()->ReinitializeGeometry();
 }
 
 void MyDetectorConstruction::SetLabMaterial(const G4String& newMaterialName)

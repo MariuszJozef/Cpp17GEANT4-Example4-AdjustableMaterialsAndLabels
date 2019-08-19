@@ -3,19 +3,11 @@
 
 #include "G4PhysicalConstants.hh"
 
-using std::make_unique;
-
 MyPrimaryGeneratorMessenger::MyPrimaryGeneratorMessenger(
 		MyPrimaryGeneratorAction *myPrimaryGeneratorAction)
 : G4UImessenger()
 , myPrimaryGeneratorAction
 	{unique_ptr<MyPrimaryGeneratorAction>(myPrimaryGeneratorAction)}
-, gunPositionUICommand {make_unique<G4UIcmdWith3VectorAndUnit>("/gun/position", this)}
-, gunDirectionUICommand {make_unique<G4UIcmdWith3Vector>("/gun/direction", this)}
-, gunDirectionAimAtPositionUICommand
-	{make_unique<G4UIcmdWith3VectorAndUnit>("/gun/direction/aimAtPosition", this)}
-, beamDispersionOnUICommand {make_unique<G4UIcmdWithABool>("/beam/dispersionOn", this)}
-, beamRandomDistributionUICommand {make_unique<G4UIcommand>("/beam/randomDistribution", this)}
 {
 	gunPositionUICommand->SetGuidance("Set gun position");
 	gunPositionUICommand->SetParameterName("x", "y", "z", false);
@@ -57,8 +49,6 @@ MyPrimaryGeneratorMessenger::MyPrimaryGeneratorMessenger(
 	beamRandomDistributionUICommand->SetToBeBroadcasted(false);
 }
 
-//MyPrimaryGeneratorMessenger::~MyPrimaryGeneratorMessenger() {}
-
 void MyPrimaryGeneratorMessenger::SetNewValue(G4UIcommand *command, G4String newValue)
 {
 	if( command == gunPositionUICommand.get() )
@@ -67,8 +57,8 @@ void MyPrimaryGeneratorMessenger::SetNewValue(G4UIcommand *command, G4String new
 				gunPositionUICommand->GetNew3VectorValue(newValue));
 //		For convenience point gun at origin after changing the position.
 //		Can override this direction by issuing UI command
-//		/gun/direction ... OR /gun/direction/atAtPosition ...
-//		myPrimaryGeneratorAction->SetGunDirection(G4ThreeVector());
+//		/gun/direction ... OR /gun/direction/aimAtPosition ...
+		myPrimaryGeneratorAction->SetGunDirection(G4ThreeVector());
 	}
 	else if( command == gunDirectionUICommand.get() )
 	{

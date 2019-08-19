@@ -3,7 +3,6 @@
 
 #include "G4UImessenger.hh"
 #include "G4UIcmdWithAString.hh"
-#include "G4UIcommand.hh"
 #include "G4LogicalVolume.hh"
 #include "G4VPhysicalVolume.hh"
 
@@ -16,7 +15,6 @@ class MyDetectorMessenger final: public G4UImessenger
 {
 public:
 	MyDetectorMessenger(MyDetectorConstruction* myDetectorConstruction);
-	~MyDetectorMessenger();
 
 	void SetNewValue(G4UIcommand* command, G4String newValue) override;
 	G4String GetCurrentValue(G4UIcommand* command) override;
@@ -35,8 +33,6 @@ private:
 		{make_unique<G4UIcmdWithAString>("/material/torus", this)};
 	unique_ptr<G4UIcmdWithAString>
 		coneMaterialUICommand {make_unique<G4UIcmdWithAString>("/material/cone", this)};
-	G4UIcommand *activeRotationAxisAngleUICommand
-		{new G4UIcommand("/rotate/rotationAngles", this)};
 
 private:
 	G4String& ConvertToSynonymousMaterialName(G4String& newValue);

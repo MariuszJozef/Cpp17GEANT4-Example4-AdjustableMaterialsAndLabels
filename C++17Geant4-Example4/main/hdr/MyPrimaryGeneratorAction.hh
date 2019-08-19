@@ -11,12 +11,12 @@ class G4ParticleDefinition;
 class G4Event;
 
 using std::unique_ptr;
+using std::make_unique;
 
 class MyPrimaryGeneratorAction final: public G4VUserPrimaryGeneratorAction
 {
 public:
-	MyPrimaryGeneratorAction(G4ThreeVector halfLabSize);
-//	~MyPrimaryGeneratorAction();
+	MyPrimaryGeneratorAction(const G4ThreeVector& halfLabSize);
 
 	void GeneratePrimaries(G4Event* anEvent) override;
 
@@ -45,10 +45,11 @@ private:
 	const G4ThreeVector& RandomiseDirection(const G4ThreeVector& gunDirection);
 
 private:
-	unique_ptr<MyPrimaryGeneratorMessenger> myPrimaryGeneratorMessenger {nullptr};
-	unique_ptr<G4ParticleGun> particleGun {nullptr};
 	G4ThreeVector halfLabSize;
 	G4ThreeVector gunPosition;
+	unique_ptr<MyPrimaryGeneratorMessenger> myPrimaryGeneratorMessenger
+		{make_unique<MyPrimaryGeneratorMessenger>(this)};
+	unique_ptr<G4ParticleGun> particleGun {make_unique<G4ParticleGun>(1)};
 	G4double gunEnergy {25*MeV};
 	G4ThreeVector gunDirection {G4ThreeVector(0, 0, 1)};
 	G4bool beamDispersionOn {true};
