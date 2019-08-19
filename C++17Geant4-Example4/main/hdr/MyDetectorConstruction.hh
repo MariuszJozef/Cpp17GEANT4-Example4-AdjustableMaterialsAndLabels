@@ -98,6 +98,10 @@ private:
 	enum class Texture { wireframe, solid };
 	Texture texture { Texture::solid };
 
+	enum class CustomBuiltMaterial { Al, Pb, Ti, CsI,
+									 graphite, pressurisedWater, heavyWater };
+	CustomBuiltMaterial customBuiltMaterial { CustomBuiltMaterial::graphite };
+
 	enum class Material { G4waterLiquid, G4waterSteam, G4Pb, G4concrete, G4skinICRP,
 						  G4softTissueICRP, G4muscleWithSucrose, G4boneICRU,
 						  G4vacuum, G4air };

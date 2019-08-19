@@ -67,13 +67,13 @@ void MyDetectorConstruction::DefineMaterials()
 											symbol="C12",
 											numberOfComponents=1)};
 	C12element->AddIsotope(C12isotope.release(), relativeAbundance=100*perCent);
-	G4Material *graphite = new G4Material(name="graphite",
-										density=2.27*g/cm3,
-										numberOfComponents=1,
-										kStateSolid,
-										temperature=293*kelvin,
-										pressure=1*atmosphere);
-	graphite->AddElement(C12element.release(), atomsPerMolecule=1);
+	G4Material *C12graphite = new G4Material(name="graphite",
+											density=2.27*g/cm3,
+											numberOfComponents=1,
+											kStateSolid,
+											temperature=293*kelvin,
+											pressure=1*atmosphere);
+	C12graphite->AddElement(C12element.release(), atomsPerMolecule=1);
 
 	// pressurized water
 	auto H {make_unique<G4Element>("Hydrogen", symbol="H",
@@ -112,16 +112,39 @@ void MyDetectorConstruction::DefineMaterials()
 	D2O->AddElement(Deuterium.release(), atomsPerMolecule=2);
 	D2O->AddElement(O.release(), atomsPerMolecule=1);
 
+	auto ChooseCustomBuiltMaterial = [this, Al, Pb, Ti, CsI,
+									  C12graphite, H2Opressurised, D2O]
+									  (CustomBuiltMaterial customBuiltMaterial)
+		{
+			switch (customBuiltMaterial)
+			{
+			case CustomBuiltMaterial::Al:
+				return Al;
+			case CustomBuiltMaterial::Pb:
+				return Pb;
+			case CustomBuiltMaterial::Ti:
+				return Ti;
+			case CustomBuiltMaterial::CsI:
+				return CsI;
+			case CustomBuiltMaterial::graphite:
+				return C12graphite;
+			case CustomBuiltMaterial::pressurisedWater:
+				return H2Opressurised;
+			case CustomBuiltMaterial::heavyWater:
+				return D2O;
+			}
+		};
+
 	if (labMaterial == nullptr)
 		labMaterial = ChooseMaterialFromNISTdatabase(Material::G4air);
 	if (trapezoidMaterial == nullptr)
-		trapezoidMaterial = Ti;
+		trapezoidMaterial = ChooseCustomBuiltMaterial(CustomBuiltMaterial::Al);
 	if (sphereMaterial == nullptr)
 		sphereMaterial = ChooseMaterialFromNISTdatabase("G4_Au");
 	if (tetrahedronMaterial == nullptr)
 		tetrahedronMaterial = ChooseMaterialFromNISTdatabase("G4_Ag");
 	if (torusMaterial == nullptr)
-		torusMaterial = Pb;
+		torusMaterial = ChooseCustomBuiltMaterial(CustomBuiltMaterial::heavyWater);
 	if (coneMaterial == nullptr)
 		coneMaterial = ChooseMaterialFromNISTdatabase(Material::G4vacuum);
 
