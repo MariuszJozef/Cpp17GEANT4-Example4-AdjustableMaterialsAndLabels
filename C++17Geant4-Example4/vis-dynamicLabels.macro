@@ -3,10 +3,10 @@
 /vis/scene/add/text -18 -18 -18 cm 10 0 0 G4_AIR
 #TrapezoidMaterial
 /vis/set/textColour white
-/vis/scene/add/text 0 4 0 cm 10 0 0 titanium
+/vis/scene/add/text 0 4 0 cm 10 0 0 G4_CONCRETE
 #SphereMaterial
 /vis/set/textColour white
-/vis/scene/add/text 0 -1.5 0 cm 10 0 0 G4_Au
+/vis/scene/add/text 0 -1.5 0 cm 10 0 0 G4_Ag
 #TetrahedronMaterial
 /vis/set/textColour white
 /vis/scene/add/text 4 2 1 cm 10 0 0 G4_BONE_COMPACT_ICRU
@@ -16,3 +16,7 @@
 #ConeMaterial
 /vis/set/textColour white
 /vis/scene/add/text -13 0 0 cm 10 0 0 G4_SKIN_ICRP
+#ParticleGun:
+/vis/set/textColour cyan
+/vis/scene/add/text2D -0.9 0.7 12 ! ! gun particle: e+
+/vis/scene/add/text2D -0.9 0.6 12 ! ! gun energy: 32 MeV

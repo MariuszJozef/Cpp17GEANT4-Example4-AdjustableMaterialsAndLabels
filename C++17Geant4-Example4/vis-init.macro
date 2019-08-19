@@ -27,5 +27,4 @@
 #/vis/modeling/trajectories/drawByParticleID-0/set e- yellow
 
 /control/execute vis-staticLabels.macro
-#/control/execute vis-materialLabels.macro
 

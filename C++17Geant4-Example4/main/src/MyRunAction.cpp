@@ -9,27 +9,54 @@ MyRunAction::MyRunAction(MyDetectorConstruction *myDetectorConstruction,
 						 MyPrimaryGeneratorAction *myPrimaryGeneratorAction)
 : G4UserRunAction()
 , myDetectorConstruction {unique_ptr<MyDetectorConstruction>(myDetectorConstruction)}
-, myPrimaryGeneratorAction {unique_ptr<MyPrimaryGeneratorAction>(myPrimaryGeneratorAction)}
+, myPrimaryGeneratorAction
+	{unique_ptr<MyPrimaryGeneratorAction>(myPrimaryGeneratorAction)}
 {}
 
 void MyRunAction::EndOfRunAction(const G4Run* run)
 {
-//	DisplayMaterialLabelsViaApplyCommand(); // labels sometimes get blurred ???
-	myDetectorConstruction->DisplayMaterialLabelsViaMacroFile();
-	DisplayGunInfoViaMacroFile();
-
-	G4UImanager::GetUIpointer()->ApplyCommand("/control/execute vis-reInit.macro");
+	DisplayMaterialLabelsAndGunInfoViaMacroFile();
 }
 
-void MyRunAction::DisplayGunInfoViaMacroFile()
+void MyRunAction::DisplayMaterialLabelsAndGunInfoViaMacroFile()
 {
-	G4String fileName = "./vis-particleGunLabels.macro";
+	G4String fileName = "./vis-dynamicLabels.macro";
 
 	std::ofstream outFile;
 	outFile.open(fileName);
 	// Create and write to the file if it doesn't exit, otherwise overwrite it
 	if (outFile.is_open())
 	{
+		outFile << "#LabMaterial" << G4endl;
+		outFile << "/vis/set/textColour white" << G4endl;
+		outFile << "/vis/scene/add/text -18 -18 -18 cm 10 0 0 "
+				<< myDetectorConstruction->GetLabMaterial() << G4endl;
+
+		outFile << "#TrapezoidMaterial" << G4endl;
+		outFile << "/vis/set/textColour white" << G4endl;
+		outFile << "/vis/scene/add/text 0 4 0 cm 10 0 0 "
+				<< myDetectorConstruction->GetTrapezoidMaterial() << G4endl;
+
+		outFile << "#SphereMaterial" << G4endl;
+		outFile << "/vis/set/textColour white" << G4endl;
+		outFile << "/vis/scene/add/text 0 -1.5 0 cm 10 0 0 "
+				<< myDetectorConstruction->GetSphereMaterial() << G4endl;
+
+		outFile << "#TetrahedronMaterial" << G4endl;
+		outFile << "/vis/set/textColour white" << G4endl;
+		outFile << "/vis/scene/add/text 4 2 1 cm 10 0 0 "
+				<< myDetectorConstruction->GetTetrahedronMaterial() << G4endl;
+
+		outFile << "#TorusMaterial" << G4endl;
+		outFile << "/vis/set/textColour white" << G4endl;
+		outFile << "/vis/scene/add/text 14 9 6 cm 10 0 0 "
+				<< myDetectorConstruction->GetTorusMaterial() << G4endl;
+
+		outFile << "#ConeMaterial" << G4endl;
+		outFile << "/vis/set/textColour white" << G4endl;
+		outFile << "/vis/scene/add/text -13 0 0 cm 10 0 0 "
+				<< myDetectorConstruction->GetConeMaterial() << G4endl;
+
 		outFile << "#ParticleGun:" << G4endl;
 		outFile << "/vis/set/textColour cyan" << G4endl;
 		outFile << "/vis/scene/add/text2D -0.9 0.7 12 ! ! gun particle: "
@@ -40,8 +67,10 @@ void MyRunAction::DisplayGunInfoViaMacroFile()
 //		outFile << "#Scale interval set to yellow colour:" << G4endl;
 //		outFile << "/vis/set/textColour yellow" << G4endl;
 //		outFile << "/vis/scene/add/scale" << G4endl;
-//
+
 		outFile.close();
+
+		G4UImanager::GetUIpointer()->ApplyCommand("/control/execute vis-reInit.macro");
 	}
 	else
 	{
@@ -49,10 +78,10 @@ void MyRunAction::DisplayGunInfoViaMacroFile()
 	}
 }
 
-void MyRunAction::DisplayMaterialLabelsViaApplyCommand()
+void MyRunAction::DisplayMaterialLabelsAndGunInfoViaApplyCommand()
 {
 	G4UImanager *uiManager = G4UImanager::GetUIpointer();
-	uiManager->ApplyCommand("/vis/drawVolume");
+	uiManager->ApplyCommand("/vis/drawVolume"); // clears labels
 	uiManager->ApplyCommand("/vis/scene/add/axes");
 	uiManager->ApplyCommand("/vis/scene/add/eventID");
 	uiManager->ApplyCommand("/vis/scene/add/trajectories smooth");

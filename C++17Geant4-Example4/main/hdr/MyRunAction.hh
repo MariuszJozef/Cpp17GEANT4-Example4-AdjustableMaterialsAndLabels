@@ -18,8 +18,8 @@ public:
 	void EndOfRunAction(const G4Run* run) override;
 
 private:
-	void DisplayGunInfoViaMacroFile();
-	void DisplayMaterialLabelsViaApplyCommand();
+	void DisplayMaterialLabelsAndGunInfoViaMacroFile();
+	void DisplayMaterialLabelsAndGunInfoViaApplyCommand();
 
 private:
 	unique_ptr<MyDetectorConstruction> myDetectorConstruction;

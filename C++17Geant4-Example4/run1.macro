@@ -1,3 +1,5 @@
+# At GUI command prompt type: /control/execute run1.macro
+
 /run/beamOn 3
 /material/sphere G4_Ag
 /material/trapezoid concrete
@@ -12,10 +14,3 @@
 /beam/dispersionOn false
 /run/beamOn 3
 
-
-/gun/particle e+
-/gun/energy 32 MeV
-/material/cone skin
-/material/tetrahedron bone
-/material/torus soft tissue
-/run/beamOn 4
