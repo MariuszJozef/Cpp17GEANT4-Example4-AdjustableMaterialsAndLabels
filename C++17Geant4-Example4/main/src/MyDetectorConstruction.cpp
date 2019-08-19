@@ -10,13 +10,22 @@
 #include "G4RunManager.hh"
 #include "G4UImanager.hh"
 
+MyDetectorConstruction::MyDetectorConstruction()
+: G4VUserDetectorConstruction()
+, labMaterial 			{ChooseMaterial(MaterialNISTdatabase::G4air)}
+, trapezoidMaterial 	{ChooseMaterial(MaterialCustomBuilt::Al)}
+, sphereMaterial 	  	{ChooseMaterial("G4_Au")}
+, tetrahedronMaterial 	{ChooseMaterial("G4_Ag")}
+, torusMaterial 		{ChooseMaterial(MaterialCustomBuilt::heavyWater)}
+, coneMaterial 			{ChooseMaterial(MaterialNISTdatabase::G4vacuum)}
+{}
+
 G4VPhysicalVolume* MyDetectorConstruction::Construct()
 {
-	DefineMaterials();
 	return ConstructDetector();
 }
 
-void MyDetectorConstruction::DefineMaterials()
+G4Material* MyDetectorConstruction::ChooseMaterial(MaterialCustomBuilt materialCustom)
 {
 	G4String name, symbol;
 	G4double density, temperature, pressure;
@@ -112,79 +121,59 @@ void MyDetectorConstruction::DefineMaterials()
 	D2O->AddElement(Deuterium.release(), atomsPerMolecule=2);
 	D2O->AddElement(O.release(), atomsPerMolecule=1);
 
-	auto ChooseCustomBuiltMaterial = [this, Al, Pb, Ti, CsI,
-									  C12graphite, H2Opressurised, D2O]
-									  (CustomBuiltMaterial customBuiltMaterial)
-		{
-			switch (customBuiltMaterial)
-			{
-			case CustomBuiltMaterial::Al:
-				return Al;
-			case CustomBuiltMaterial::Pb:
-				return Pb;
-			case CustomBuiltMaterial::Ti:
-				return Ti;
-			case CustomBuiltMaterial::CsI:
-				return CsI;
-			case CustomBuiltMaterial::graphite:
-				return C12graphite;
-			case CustomBuiltMaterial::pressurisedWater:
-				return H2Opressurised;
-			case CustomBuiltMaterial::heavyWater:
-				return D2O;
-			}
-		};
-
-	if (labMaterial == nullptr)
-		labMaterial = ChooseMaterialFromNISTdatabase(Material::G4air);
-	if (trapezoidMaterial == nullptr)
-		trapezoidMaterial = ChooseCustomBuiltMaterial(CustomBuiltMaterial::Al);
-	if (sphereMaterial == nullptr)
-		sphereMaterial = ChooseMaterialFromNISTdatabase("G4_Au");
-	if (tetrahedronMaterial == nullptr)
-		tetrahedronMaterial = ChooseMaterialFromNISTdatabase("G4_Ag");
-	if (torusMaterial == nullptr)
-		torusMaterial = ChooseCustomBuiltMaterial(CustomBuiltMaterial::heavyWater);
-	if (coneMaterial == nullptr)
-		coneMaterial = ChooseMaterialFromNISTdatabase(Material::G4vacuum);
-
-//	DisplayMaterialLabelsViaMacroFile();
+	switch (materialCustom)
+	{
+	case MaterialCustomBuilt::Al:
+		return Al;
+	case MaterialCustomBuilt::Pb:
+		return Pb;
+	case MaterialCustomBuilt::Ti:
+		return Ti;
+	case MaterialCustomBuilt::CsI:
+		return CsI;
+	case MaterialCustomBuilt::graphite:
+		return C12graphite;
+	case MaterialCustomBuilt::pressurisedWater:
+		return H2Opressurised;
+	case MaterialCustomBuilt::heavyWater:
+		return D2O;
+	default:
+		return D2O; // better to issue warning or throw exception ...
+	}
 }
 
-G4Material* MyDetectorConstruction::ChooseMaterialFromNISTdatabase(Material material)
-{
-// A selection of popular materials
-	switch (material)
+G4Material* MyDetectorConstruction::ChooseMaterial(MaterialNISTdatabase materialNIST)
+{// A selection of popular materials from NIST database
+	switch (materialNIST)
 	{
-		case Material::G4waterLiquid:
+		case MaterialNISTdatabase::G4waterLiquid:
 			return G4NistManager::Instance()->FindOrBuildMaterial("G4_WATER");
-		case Material::G4waterSteam:
+		case MaterialNISTdatabase::G4waterSteam:
 			return G4NistManager::Instance()->FindOrBuildMaterial("G4_WATER_VAPOR");
-		case Material::G4Pb:
+		case MaterialNISTdatabase::G4Pb:
 			return G4NistManager::Instance()->FindOrBuildMaterial("G4_Pb");
-		case Material::G4concrete:
+		case MaterialNISTdatabase::G4concrete:
 			return G4NistManager::Instance()->FindOrBuildMaterial("G4_CONCRETE");
-		case Material::G4skinICRP:
+		case MaterialNISTdatabase::G4skinICRP:
 			return G4NistManager::Instance()->FindOrBuildMaterial("G4_SKIN_ICRP");
-		case Material::G4softTissueICRP:
+		case MaterialNISTdatabase::G4softTissueICRP:
 			return G4NistManager::Instance()->FindOrBuildMaterial("G4_TISSUE_SOFT_ICRP");
-		case Material::G4muscleWithSucrose:
+		case MaterialNISTdatabase::G4muscleWithSucrose:
 			return G4NistManager::Instance()->FindOrBuildMaterial("G4_MUSCLE_WITH_SUCROSE");
-		case Material::G4boneICRU:
+		case MaterialNISTdatabase::G4boneICRU:
 			return G4NistManager::Instance()->FindOrBuildMaterial("G4_BONE_COMPACT_ICRU");
-		case Material::G4vacuum:
+		case MaterialNISTdatabase::G4vacuum:
 			return G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic");
-		case Material::G4air:
+		case MaterialNISTdatabase::G4air:
 			return G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
 		default:
 			return G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
 	}
 }
 
-G4Material* MyDetectorConstruction::ChooseMaterialFromNISTdatabase(const G4String& material)
-{
-//	Additional materials can be obtained by supplying the correct name, e.g. "G4_Au".
-	return G4NistManager::Instance()->FindOrBuildMaterial(material);
+G4Material* MyDetectorConstruction::ChooseMaterial(const G4String& materialNIST)
+{//	Additional materials can be obtained by supplying the correct name, e.g. "G4_Au".
+	return G4NistManager::Instance()->FindOrBuildMaterial(materialNIST);
 }
 
 G4VPhysicalVolume* MyDetectorConstruction::ConstructDetector()
@@ -598,59 +587,5 @@ void MyDetectorConstruction::SetConeMaterial(const G4String& newMaterialName)
 	else
 	{
 		G4cerr << "Material not found" << G4endl;
-	}
-}
-
-void MyDetectorConstruction::DisplayMaterialLabelsViaMacroFile()
-{
-	G4String fileName = "./vis-materialLabels.macro";
-
-	std::ofstream outFile;
-	outFile.open(fileName);
-	// Create and write to the file if it doesn't exit, otherwise overwrite it
-	if (outFile.is_open())
-	{
-		outFile << "#LabMaterial" << G4endl;
-		outFile << "/vis/set/textColour white" << G4endl;
-		outFile << "/vis/scene/add/text -18 -18 -18 cm 10 0 0 "
-				<< labMaterial->GetName() << G4endl;
-
-		outFile << "#TrapezoidMaterial" << G4endl;
-		outFile << "/vis/set/textColour white" << G4endl;
-		outFile << "/vis/scene/add/text 0 4 0 cm 10 0 0 "
-				<< trapezoidMaterial->GetName() << G4endl;
-
-		outFile << "#SphereMaterial" << G4endl;
-		outFile << "/vis/set/textColour white" << G4endl;
-		outFile << "/vis/scene/add/text 0 -1.5 0 cm 10 0 0 "
-				<< sphereMaterial->GetName() << G4endl;
-
-		outFile << "#TetrahedronMaterial" << G4endl;
-		outFile << "/vis/set/textColour white" << G4endl;
-		outFile << "/vis/scene/add/text 4 2 1 cm 10 0 0 "
-				<< tetrahedronMaterial->GetName() << G4endl;
-
-		outFile << "#TorusMaterial" << G4endl;
-		outFile << "/vis/set/textColour white" << G4endl;
-		outFile << "/vis/scene/add/text 14 9 6 cm 10 0 0 "
-				<< torusMaterial->GetName() << G4endl;
-
-		outFile << "#ConeMaterial" << G4endl;
-		outFile << "/vis/set/textColour white" << G4endl;
-		outFile << "/vis/scene/add/text -13 0 0 cm 10 0 0 "
-				<< coneMaterial->GetName() << G4endl;
-
-//		outFile << "#Scale interval set to yellow colour:" << G4endl;
-//		outFile << "/vis/set/textColour yellow" << G4endl;
-
-		outFile.close();
-
-//		G4UImanager *uiManager {G4UImanager::GetUIpointer()};
-//		uiManager->ApplyCommand("/control/execute vis-reInit.macro");
-//		uiManager->ApplyCommand("/control/execute vis-materialLabels.macro");
-	}
-	else
-	{
-		G4cerr << "Could not create file " << fileName << G4endl;
 	}
 }

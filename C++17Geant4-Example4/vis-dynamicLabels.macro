@@ -3,16 +3,16 @@
 /vis/scene/add/text -18 -18 -18 cm 10 0 0 G4_AIR
 #TrapezoidMaterial
 /vis/set/textColour white
-/vis/scene/add/text 0 4 0 cm 10 0 0 G4_BONE_COMPACT_ICRU
+/vis/scene/add/text 0 4 0 cm 10 0 0 aluminium
 #SphereMaterial
 /vis/set/textColour white
 /vis/scene/add/text 0 -1.5 0 cm 10 0 0 G4_Au
 #TetrahedronMaterial
 /vis/set/textColour white
-/vis/scene/add/text 4 2 1 cm 10 0 0 G4_Ag
+/vis/scene/add/text 4 2 0 cm 10 0 0 G4_Ag
 #TorusMaterial
 /vis/set/textColour white
-/vis/scene/add/text 14 9 6 cm 10 0 0 pressurised water
+/vis/scene/add/text 14 9 6 cm 10 0 0 heavy water
 #ConeMaterial
 /vis/set/textColour white
 /vis/scene/add/text -13 0 0 cm 10 0 0 G4_Galactic

@@ -27,6 +27,8 @@ using std::make_unique;
 class MyDetectorConstruction final: public G4VUserDetectorConstruction
 {
 public:
+	MyDetectorConstruction();
+
 	G4VPhysicalVolume* Construct() override;
 
 	G4ThreeVector GetHalfLabSize() const { return halfLabSize; }
@@ -48,8 +50,6 @@ public:
 
 	G4String GetConeMaterial() const { return coneMaterial->GetName(); }
 	void SetConeMaterial(const G4String& newMaterialName);
-
-	void DisplayMaterialLabelsViaMacroFile();
 
 private:
 	unique_ptr<MyDetectorMessenger> myDetectorMessenger
@@ -98,17 +98,17 @@ private:
 	enum class Texture { wireframe, solid };
 	Texture texture { Texture::solid };
 
-	enum class CustomBuiltMaterial { Al, Pb, Ti, CsI,
+	enum class MaterialCustomBuilt { Al, Pb, Ti, CsI,
 									 graphite, pressurisedWater, heavyWater };
-	CustomBuiltMaterial customBuiltMaterial { CustomBuiltMaterial::graphite };
+	MaterialCustomBuilt materialCustom { MaterialCustomBuilt::graphite };
 
-	enum class Material { G4waterLiquid, G4waterSteam, G4Pb, G4concrete, G4skinICRP,
-						  G4softTissueICRP, G4muscleWithSucrose, G4boneICRU,
-						  G4vacuum, G4air };
-	Material material { Material::G4air };
+	enum class MaterialNISTdatabase { G4waterLiquid, G4waterSteam, G4Pb, G4concrete,
+										G4skinICRP, G4softTissueICRP,
+										G4muscleWithSucrose, G4boneICRU,
+										G4vacuum, G4air };
+	MaterialNISTdatabase materialNIST { MaterialNISTdatabase::G4air };
 
 private:
-	void DefineMaterials();
 	G4VPhysicalVolume* ConstructDetector();
 	G4VPhysicalVolume* BuildLab();
 	unique_ptr<G4VPhysicalVolume> BuildTrapezoid();
@@ -118,8 +118,9 @@ private:
 	unique_ptr<G4VPhysicalVolume> BuildCone();
 	unique_ptr<G4VisAttributes> ChooseColour(Colour colour,
 											Texture texture = Texture::solid);
-	G4Material* ChooseMaterialFromNISTdatabase(Material material);
-	G4Material* ChooseMaterialFromNISTdatabase(const G4String& material);
+	G4Material* ChooseMaterial(MaterialCustomBuilt materialCustom);
+	G4Material* ChooseMaterial(MaterialNISTdatabase materialNIST);
+	G4Material* ChooseMaterial(const G4String& materialNIST);
 };
 
 #endif /* HDR_MYDETECTORCONSTRUCTION_HH_ */

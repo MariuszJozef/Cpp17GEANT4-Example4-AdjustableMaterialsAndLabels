@@ -44,7 +44,7 @@ void MyRunAction::DisplayMaterialLabelsAndGunInfoViaMacroFile()
 
 		outFile << "#TetrahedronMaterial" << G4endl;
 		outFile << "/vis/set/textColour white" << G4endl;
-		outFile << "/vis/scene/add/text 4 2 1 cm 10 0 0 "
+		outFile << "/vis/scene/add/text 4 2 0 cm 10 0 0 "
 				<< myDetectorConstruction->GetTetrahedronMaterial() << G4endl;
 
 		outFile << "#TorusMaterial" << G4endl;
